@@ -1,19 +1,34 @@
 # `require` will read and execute this file:
 # /Users/terrell/.rbenv/versions/2.5.1/lib/ruby/2.5.0/socket.rb
 require "socket"
+require "rubygems"
+require "bundler/setup"
+require "mysql2"
 
 # Executes report.rb, producing no output,
 # after which, report_all func will be defined.
 require "/Users/terrell/Code/http_server/lib/report.rb"
+client = Mysql2::Client.new(:host => "localhost", :username => "root", :database => "inquiry")
+results = client.query("SELECT * FROM cars where name='Ford Focus ST'")
+
+def plain_result(results)
+  results.to_a.to_s
+end
+
 
 message = <<~MSG
+<!DOCTYPE html>
 <html>
+<head>
+  <link rel="stylesheet" type="text/css" href="css/http_server.css"
+</head>
 <body>
-<script>
- document.write ("Goodbye");
-</script>
-  <h1 style="">Hello World</h1>
+  <h1>
+    #{plain_result(results)}
+  </h1>
 </body>
+<footer>
+</footer>
 </html>
 MSG
 
